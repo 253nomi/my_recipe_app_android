@@ -8,11 +8,14 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myrecipeapp.repository.MainRepositoryImpl
@@ -37,21 +40,12 @@ class MainActivity : ComponentActivity() {
 
     // ------------------ COMPOSE UI ------------------
     private fun setupComposeUI() {
+        enableEdgeToEdge()
         setContent {
-            enableEdgeToEdge()
             MyRecipeAppTheme {
-
-                val repository = remember {
-                    MainRepositoryImpl(apiService = receipeService)
-                }
-
-                val recipeViewModel = MainViewModelCompose(_repository = repository)
-
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    RecipeScreen(
-                        modifier = Modifier.padding(innerPadding),
-                        recipeViewModel
-                    )
+                val navController = rememberNavController()
+                Scaffold(modifier = Modifier.fillMaxSize(),  contentWindowInsets = WindowInsets.safeDrawing) { innerPadding ->
+                    ComposeRecipeApp(navController, Modifier.padding(innerPadding),)
                 }
             }
         }

@@ -1,6 +1,7 @@
 package com.example.myrecipeapp
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -28,7 +29,7 @@ import com.example.myrecipeapp.viewmodels.RecipeState
 
 
 @Composable
-fun RecipeScreen(modifier: Modifier = Modifier, viewModel: MainViewModelCompose) {
+fun RecipeScreen(modifier: Modifier = Modifier, viewModel: MainViewModelCompose, navigateToDetails: (Category) -> Unit) {
 
     val viewState by viewModel.categoriesState
 
@@ -43,27 +44,29 @@ fun RecipeScreen(modifier: Modifier = Modifier, viewModel: MainViewModelCompose)
             }
 
             else -> {
-               CategoryScreen(viewState.categories)
+               CategoryScreen(viewState.categories, navigateToDetails)
             }
         }
     }
 }
 
 @Composable
-fun CategoryScreen(categories: List<Category>) {
+fun CategoryScreen(categories: List<Category>, navigateToDetails: (Category) -> Unit) {
     LazyVerticalGrid(GridCells.Fixed(2), Modifier.fillMaxSize()) {
         items(categories) { category ->
-            CategoryItem(category)
+            CategoryItem(category, navigateToDetails)
         }
     }
 }
 
 @Composable
-fun CategoryItem(category: Category) {
+fun CategoryItem(category: Category, navigateToDetails: (Category) -> Unit ) {
     Column(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxSize(),
+            .fillMaxSize().clickable{
+                navigateToDetails(category)
+            },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
